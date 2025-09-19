@@ -1,39 +1,27 @@
-# help.py — Comprehensive Help & Troubleshooting for AI Literature Helper
-# ~500 lines covering all common issues, disclaimers, and FAQs
+# help.py — Hierarchical Help Page for AI Literature Helper
+# Category-based navigation + detailed sections with Ask Gemini link
 
 import streamlit as st
 
 # Page setup
 st.set_page_config(page_title="AI Literature Helper – Help", page_icon="🆘", layout="wide")
 
-# Sidebar navigation
-st.sidebar.title("📘 Help Navigation")
-section = st.sidebar.radio("Jump to section:", [
-    "Overview",
-    "Getting Started",
-    "Recommended Workflow",
-    "Boolean Queries",
-    "AI Annotations & Relevance",
-    "Paste Citation Mode",
-    "URL / PDF Lookup",
-    "Disclaimers & Limitations",
-    "Text Parsing Issues",
-    "PDF Parsing Issues",
-    "PubMed & Semantic Scholar",
-    "API Errors",
-    "Zotero Integration",
-    "Duplicates & Metadata",
-    "Performance & Limits",
-    "Institutional Access & Proxies",
-    "Secrets & Configuration",
+# Sidebar navigation — categories first
+st.sidebar.title("📘 Help Categories")
+category = st.sidebar.selectbox("Choose a category:", [
+    "General",
+    "Using the App",
+    "Data Sources",
+    "AI Features",
+    "Errors & Troubleshooting",
+    "Integration",
+    "Technical Setup",
     "Tips & Best Practices",
-    "FAQs",
-    "Troubleshooting Checklist",
-    "Ask Gemini",
     "Contact"
 ])
-st.sidebar.markdown("---")
 
+# --------------------------
+# Back button to main app
 st.sidebar.markdown("""
 <div style="text-align: center;">
     <a href="/" target="_self">
@@ -54,319 +42,341 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ========== Sections ==========
+# ===========================
+# General
+# ===========================
+if category == "General":
+    point = st.selectbox("Select a help point:", [
+        "Overview",
+        "Recommended Workflow",
+        "Disclaimers & Limitations",
+        "FAQs"
+    ])
 
-if section == "Overview":
-    st.title("🆘 Help & Instructions")
-    st.markdown("""
-    Welcome to **AI Literature Helper** — your research assistant powered by PubMed, Semantic Scholar, Crossref, and Gemini AI.
+    if point == "Overview":
+        st.title("🆘 Overview")
+        st.markdown("""
+        **AI Literature Helper** is a Streamlit app that combines PubMed, Semantic Scholar, Crossref, and Gemini AI to assist your literature review.
 
-    This app helps you:
-    - Search academic papers (PubMed, Semantic Scholar)
-    - Extract metadata from citations, DOIs, or PDFs
-    - Generate AI abstracts, tags, and relevance scores
-    - Save papers directly to Zotero
+        Key Features:
+        - Keyword Search (PubMed & Semantic Scholar)
+        - Paste citation / text parsing
+        - DOI, URL, PDF metadata lookup
+        - AI abstracts, tags, relevance scoring
+        - Zotero export
+        """)
+    elif point == "Recommended Workflow":
+        st.header("✅ Recommended Workflow")
+        st.markdown("""
+        For **best reliability**:
+        1. Start with **Keyword Search** (PubMed / Semantic Scholar).
+        2. If paper not found → try **Paste Citation**.
+        3. As a **last resort** → use **URL / DOI / PDF Lookup**.
 
-    ⚠️ **Important:** This tool assists your literature review. Always double-check metadata, abstracts, and relevance scores against the original sources.
-    """)
+        👉 PubMed & Semantic Scholar are **preferred**.
+        👉 Parsing text and PDFs is less reliable and may fail.
+        """)
+    elif point == "Disclaimers & Limitations":
+        st.header("⚠️ Disclaimers & Limitations")
+        st.markdown("""
+        - AI abstracts may contain inaccuracies — always check the paper.
+        - PDF parsing often fails for scanned documents.
+        - Google fallback search may give irrelevant results.
+        - Zotero rejects incomplete metadata.
+        - APIs enforce rate limits (Semantic Scholar = 1 request/sec).
+        """)
+    elif point == "FAQs":
+        st.header("❓ FAQs")
+        st.markdown("""
+        **Q: Can I trust AI summaries?**  
+        A: They are approximate. Always validate.
 
-elif section == "Getting Started":
-    st.header("🚀 Getting Started")
-    st.markdown("""
-    1. Open the app in your browser.
-    2. Choose a mode:
-       - **Keyword Search** (best for systematic review)
-       - **Paste Citation / Text** (fallback for copied references)
-       - **URL / DOI / PDF Lookup** (last resort if no metadata found)
-    3. Adjust:
-       - **Max Results**
-       - **Minimum Relevance Score (0–3)**
-    4. (Optional) Add Zotero credentials in the sidebar.
-    5. Click **🚀 Go** to start.
+        **Q: Why are scores inconsistent?**  
+        A: Relevance is heuristic. Use it as guidance only.
 
-    Results show:
-    - AI Abstract (10–15 sentences)
-    - Tags (`aRT`, `aTa`, `aTy`, `aMe`, `ai score-N`)
-    - AI Relevance score (0–3)
-    - Links to paper, DOI, and NTU proxy access
-    """)
+        **Q: Can I export BibTeX?**  
+        A: Yes, via Zotero after import.
 
-elif section == "Recommended Workflow":
-    st.header("✅ Recommended Workflow")
-    st.markdown("""
-    For **best results**:
+        **Q: Does it cover all disciplines?**  
+        A: Strongest for biomedical, CS, natural sciences.
+        """)
 
-    1. **Always start with Keyword Search**:
-       - Use **PubMed** and/or **Semantic Scholar**
-       - Enable AI Boolean optimization if your query is complex
-    2. If paper not found:
-       - Try **Paste Citation / Text** mode
-       - Paste from Google Scholar or your reference list
-    3. As a **last resort**:
-       - Use **URL / DOI / PDF Lookup**
-       - Works best with official DOIs or open-access PDFs
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-    👉 PubMed & Semantic Scholar APIs are **most reliable**.  
-    👉 Paste/URL/PDF modes may fail due to parsing errors or paywalls.
-    """)
+# ===========================
+# Using the App
+# ===========================
+elif category == "Using the App":
+    point = st.selectbox("Select a help point:", [
+        "How to Use",
+        "Boolean Queries",
+        "Paste Citation Mode",
+        "URL / PDF Lookup"
+    ])
 
-elif section == "Boolean Queries":
-    st.header("🔤 Boolean Queries")
-    st.markdown("""
-    - AI can generate Boolean queries (AND, OR, NOT).
-    - PubMed truncates queries after **300 characters**.
-    - Always review AI-suggested queries in the editable box.
-    - Example: `"CRISPR" AND "prime editing" NOT "review"`
+    if point == "How to Use":
+        st.header("🚀 How to Use")
+        st.markdown("""
+        1. Pick a mode:
+           - Keyword Search
+           - Paste Citation / Text
+           - URL / DOI / PDF
+        2. Adjust **Max Results** & **Relevance Threshold**.
+        3. (Optional) Add Zotero credentials.
+        4. Click **🚀 Go**.
+        """)
+    elif point == "Boolean Queries":
+        st.header("🔤 Boolean Queries")
+        st.markdown("""
+        - Use AND / OR / NOT for precision.
+        - PubMed truncates queries >300 characters.
+        - Example: `"CRISPR" AND "prime editing" NOT "review"`
+        """)
+    elif point == "Paste Citation Mode":
+        st.header("📋 Paste Citation Mode")
+        st.markdown("""
+        Paste references or Google Scholar text. Extracts:
+        - Title
+        - Authors
+        - Year
+        - DOI (if present)
 
-    ⚠️ Long or nested queries may break. Simplify into key terms.
-    """)
+        ⚠️ Issues:
+        - Wrong authors (affiliations misparsed)
+        - Missing years
+        - Multiple citations merged
+        """)
+    elif point == "URL / PDF Lookup":
+        st.header("🔗 URL / PDF Lookup")
+        st.markdown("""
+        ✅ Works best with:
+        - DOI links
+        - Open-access PDFs
 
-elif section == "AI Annotations & Relevance":
-    st.header("🤖 AI Annotations & Relevance")
-    st.markdown("""
-    Each paper is analyzed by Gemini AI:
+        ⚠️ Issues:
+        - “Not a PDF” → mislabelled file
+        - Empty text → scanned PDF
+        - Redirects → paywalls/institutional login
+        """)
 
-    - **AI Abstract**: 10–15 self-contained sentences
-    - **Tags**:
-      - `aRT` → broad research topic
-      - `aTa` → subtopics
-      - `aTy` → paper type (review, experimental, etc.)
-      - `aMe` → methods
-      - `ai score-N` → relevance score (0–3)
-    - **Relevance Score (0–3)**:
-      - 0 = marginal relevance
-      - 1 = low relevance
-      - 2 = moderate relevance
-      - 3 = highly relevant
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-    ⚠️ Relevance is heuristic. Always validate manually.
-    """)
+# ===========================
+# Data Sources
+# ===========================
+elif category == "Data Sources":
+    point = st.selectbox("Select a help point:", [
+        "PubMed",
+        "Semantic Scholar",
+        "Crossref",
+        "Google Fallback"
+    ])
 
-elif section == "Paste Citation Mode":
-    st.header("📋 Paste Citation Mode")
-    st.markdown("""
-    Paste citations or Google Scholar text. Gemini extracts:
-    - Title
-    - Authors
-    - Year
-    - DOI (if present)
+    if point == "PubMed":
+        st.header("🧬 PubMed")
+        st.markdown("""
+        - Best for biomedical/life sciences.
+        - Limits: 300-char queries, missing abstracts.
+        """)
+    elif point == "Semantic Scholar":
+        st.header("📡 Semantic Scholar")
+        st.markdown("""
+        - Covers CS, natural sciences.
+        - Rate limit: 1 request/sec.
+        - Some metadata missing.
+        """)
+    elif point == "Crossref":
+        st.header("🔎 Crossref")
+        st.markdown("""
+        - Enriches metadata from DOIs.
+        - Not all publishers register DOIs.
+        """)
+    elif point == "Google Fallback":
+        st.header("🌐 Google Fallback")
+        st.markdown("""
+        - Last-resort title lookup.
+        - Can return irrelevant matches.
+        """)
 
-    ⚠️ Known issues:
-    - **Nothing extracted** → Try one citation per line
-    - **Wrong authors** → Affiliations mistaken for names
-    - **Year missing** → Citation may omit year
-    - **Merged citations** → Ensure clean copy-paste
-    """)
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-elif section == "URL / PDF Lookup":
-    st.header("🔗 URL / PDF Lookup")
-    st.markdown("""
-    Use this when you only have a link or PDF.
+# ===========================
+# AI Features
+# ===========================
+elif category == "AI Features":
+    point = st.selectbox("Select a help point:", [
+        "AI Annotations",
+        "Relevance Scores",
+        "Tags"
+    ])
 
-    ✅ Works best with:
-    - DOI links
-    - Publisher landing pages
-    - Open-access PDFs
+    if point == "AI Annotations":
+        st.header("📝 AI Annotations")
+        st.markdown("""
+        AI generates 10–15 sentence abstracts per paper.  
+        ⚠️ Treat as summaries, not substitutes.
+        """)
+    elif point == "Relevance Scores":
+        st.header("⭐ Relevance Scores")
+        st.markdown("""
+        Scores (0–3):  
+        - 0 = marginal  
+        - 1 = low  
+        - 2 = moderate  
+        - 3 = highly relevant
+        """)
+    elif point == "Tags":
+        st.header("🏷️ Tags")
+        st.markdown("""
+        - `aRT` → broad topic  
+        - `aTa` → subtopics  
+        - `aTy` → paper type  
+        - `aMe` → methods  
+        - `ai score-N` → relevance
+        """)
 
-    ⚠️ Common problems:
-    - **“Not a PDF”** → Server mislabels file
-    - **No text extracted** → PDF is scanned/image-only
-    - **Redirects** → Publisher requires login
-    - **Paywalls** → Metadata unavailable
-    """)
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-elif section == "Disclaimers & Limitations":
-    st.header("⚠️ Disclaimers & Limitations")
-    st.markdown("""
-    - AI abstracts may contain inaccuracies.
-    - Relevance scoring is **advisory only**.
-    - PDF parsing often fails for scanned documents.
-    - Google fallback search is heuristic and noisy.
-    - Not all papers have DOIs, metadata, or abstracts.
-    - Zotero rejects incomplete metadata.
-    - Some APIs enforce strict **rate limits** (1 request/sec).
-    """)
+# ===========================
+# Errors & Troubleshooting
+# ===========================
+elif category == "Errors & Troubleshooting":
+    point = st.selectbox("Select a help point:", [
+        "API Errors",
+        "Text Parsing Issues",
+        "PDF Parsing Issues",
+        "Performance & Limits"
+    ])
 
-elif section == "Text Parsing Issues":
-    st.header("🔎 Text Parsing Issues")
-    st.markdown("""
-    Parsing citations is error-prone.
+    if point == "API Errors":
+        st.header("⚠️ API Errors")
+        st.markdown("""
+        - Semantic Scholar → 429 Too Many Requests
+        - PubMed → query too long, missing abstracts
+        """)
+    elif point == "Text Parsing Issues":
+        st.header("🔎 Text Parsing Issues")
+        st.markdown("""
+        - Wrong authors
+        - Year misread
+        - DOI hidden
+        """)
+    elif point == "PDF Parsing Issues":
+        st.header("📄 PDF Parsing Issues")
+        st.markdown("""
+        - Only first 5000–8000 chars extracted
+        - Scanned PDFs → empty
+        """)
+    elif point == "Performance & Limits":
+        st.header("⚡ Performance & Limits")
+        st.markdown("""
+        - Rate limits: S2 = 1/sec, PubMed strict
+        - Large PDFs trimmed
+        """)
 
-    **Possible issues:**
-    - Authors list truncated or misformatted
-    - Journal names mistaken for authors
-    - Year misread from volume/issue numbers
-    - DOIs hidden inside text
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-    **Fixes:**
-    - Clean citation manually before pasting
-    - Try using Keyword Search first
-    - If DOI available, use DOI Lookup
-    """)
+# ===========================
+# Integration
+# ===========================
+elif category == "Integration":
+    point = st.selectbox("Select a help point:", [
+        "Zotero",
+        "Duplicates & Metadata",
+        "Institutional Access"
+    ])
 
-elif section == "PDF Parsing Issues":
-    st.header("📄 PDF Parsing Issues")
-    st.markdown("""
-    **PDF text extraction** is limited:
-    - Only first ~5000–8000 characters used
-    - Scanned PDFs return empty text
-    - Equations and tables often lost
-    - Metadata (title/authors) guessed heuristically
+    if point == "Zotero":
+        st.header("📥 Zotero Integration")
+        st.markdown("""
+        - Needs API key, User ID, Collection ID
+        - Exports only relevant papers
+        - Duplicate check by Title + DOI
+        """)
+    elif point == "Duplicates & Metadata":
+        st.header("📑 Duplicates & Metadata")
+        st.markdown("""
+        - Zotero rejects incomplete metadata
+        - Crossref enrichment helps
+        """)
+    elif point == "Institutional Access":
+        st.header("🏫 Institutional Access & Proxies")
+        st.markdown("""
+        - NTU proxy links generated automatically
+        - Requires NTU login
+        """)
 
-    **Best practice:**
-    - Use DOI whenever possible
-    - Treat PDF parsing as **last resort**
-    """)
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-elif section == "PubMed & Semantic Scholar":
-    st.header("📡 PubMed & Semantic Scholar")
-    st.markdown("""
-    - **PubMed** → best for biomedical and life sciences
-    - **Semantic Scholar** → broader, especially computer science
+# ===========================
+# Technical Setup
+# ===========================
+elif category == "Technical Setup":
+    point = st.selectbox("Select a help point:", [
+        "Secrets & Configuration",
+        "Requirements.txt",
+        "Deployment"
+    ])
 
-    **Limitations:**
-    - PubMed truncates long queries
-    - Semantic Scholar enforces **1 request/sec**
-    - Some papers missing abstracts or DOIs
-    - Metadata may differ between APIs
+    if point == "Secrets & Configuration":
+        st.header("🔑 Secrets & Configuration")
+        st.markdown("""
+        `.streamlit/secrets.toml` example:
 
-    👉 Always cross-check with publisher pages.
-    """)
+        ```toml
+        SEMANTIC_SCHOLAR_API_KEY = "key"
+        GEMINI_API_KEY = "key"
+        NCBI_EMAIL = "you@email.com"
+        NCBI_API_KEY = "key"
+        ZOTERO_API_KEY = "key"
+        ZOTERO_USER_ID = "id"
+        ZOTERO_COLLECTION_ID = "id"
+        ```
+        """)
+    elif point == "Requirements.txt":
+        st.header("📦 requirements.txt")
+        st.markdown("""
+        Must include:
+        - streamlit
+        - requests
+        - pyzotero
+        - pymupdf
+        - google-genai
+        """)
+    elif point == "Deployment":
+        st.header("🚀 Deployment")
+        st.markdown("""
+        - Works on Streamlit Cloud
+        - Check secrets syntax
+        - Ensure dependencies pinned
+        """)
 
-elif section == "API Errors":
-    st.header("⚠️ API Errors")
-    st.markdown("""
-    **Semantic Scholar**
-    - “429 Too Many Requests” → Exceeded 1 request/sec
-    - Fix: add delay or retry later
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-    **PubMed**
-    - “ESearch failed” → Timeout
-    - “Query too long” → Truncated at 300 chars
-    - Missing abstracts → Not all entries provide them
-
-    **Crossref**
-    - DOI not found → Some publishers don’t register metadata
-    """)
-
-elif section == "Zotero Integration":
-    st.header("📥 Zotero Integration")
-    st.markdown("""
-    ### Setup
-    - Generate [Zotero API Key](https://www.zotero.org/settings/keys)
-    - Find **User ID** in Zotero account
-    - Find **Collection ID** by right-clicking collection → Edit
-
-    ### Rules
-    - Only saves papers with score ≥ threshold
-    - Includes title, authors, abstract, tags, URL
-    - Duplicate check by Title + DOI
-
-    ⚠️ Zotero rejects empty fields → metadata must be complete
-    """)
-
-elif section == "Duplicates & Metadata":
-    st.header("📑 Duplicates & Metadata")
-    st.markdown("""
-    - **Duplicates** detected by Title + DOI
-    - Zotero duplicate check may miss some
-    - Crossref enrichment improves metadata
-    - Incomplete metadata may prevent Zotero save
-    """)
-
-elif section == "Performance & Limits":
-    st.header("⚡ Performance & Limits")
-    st.markdown("""
-    - Semantic Scholar: 1 request/sec
-    - PubMed: ~3 requests/sec safe
-    - Timeouts: 30–45 seconds
-    - Large PDFs trimmed to first ~8000 chars
-    - Progress bar may appear stuck → refresh app
-    """)
-
-elif section == "Institutional Access & Proxies":
-    st.header("🏫 Institutional Access & Proxies")
-    st.markdown("""
-    - NTU proxy links auto-generated for DOI/URL
-    - Requires NTU login to access paywalled content
-    - If outside NTU → proxy links won’t work
-    - Open-access PDFs bypass login
-    """)
-
-elif section == "Secrets & Configuration":
-    st.header("🔑 Secrets & Configuration")
-    st.markdown("""
-    Store sensitive keys in `.streamlit/secrets.toml`:
-
-    ```toml
-    SEMANTIC_SCHOLAR_API_KEY = "your_key"
-    GEMINI_API_KEY = "your_gemini_key"
-    NCBI_EMAIL = "your_email"
-    NCBI_API_KEY = "your_ncbi_key"
-    ZOTERO_API_KEY = "your_zotero_key"
-    ZOTERO_USER_ID = "your_user_id"
-    ZOTERO_COLLECTION_ID = "your_collection_id"
-    ```
-
-    ⚠️ Ensure valid TOML syntax:
-    - Keys = values with quotes
-    - No stray characters after closing quote
-    """)
-
-elif section == "Tips & Best Practices":
+# ===========================
+# Tips & Best Practices
+# ===========================
+elif category == "Tips & Best Practices":
     st.header("💡 Tips & Best Practices")
     st.markdown("""
-    - Start with PubMed/Semantic Scholar
+    - Always start with PubMed/Semantic Scholar
     - Keep queries short
-    - Use Boolean operators for precision
+    - Use Boolean operators
     - Paste one citation per line
     - Validate AI abstracts with originals
-    - Save to Zotero after verifying metadata
+    - Cross-check metadata before Zotero save
     """)
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
 
-elif section == "FAQs":
-    st.header("❓ Frequently Asked Questions")
-    st.markdown("""
-    **Q: Can I trust AI abstracts?**  
-    A: They’re summaries only. Always verify.
-
-    **Q: Why are scores off?**  
-    A: Relevance is heuristic. Use as guide only.
-
-    **Q: Does it cover all fields?**  
-    A: Strongest in biomedical, CS, natural sciences.
-
-    **Q: Can I export to BibTeX/EndNote?**  
-    A: Yes, via Zotero exports.
-    """)
-
-elif section == "Troubleshooting Checklist":
-    st.header("🛠️ Troubleshooting Checklist")
-    st.markdown("""
-    - ✅ Tried PubMed/Semantic Scholar first?
-    - ✅ Query short and precise?
-    - ✅ One citation per line?
-    - ✅ DOI pasted correctly?
-    - ✅ Zotero keys valid?
-    - ✅ Not exceeding API limits?
-    - ✅ Checked if PDF is scanned?
-    """)
-
-elif section == "Ask Gemini":
-    st.header("🤖 Ask Gemini")
-    st.markdown("""
-    Still need help? Ask **Google Gemini** directly:  
-    👉 [**Ask Gemini**](https://gemini.google.com/)
-    """)
-
-elif section == "Contact":
+# ===========================
+# Contact
+# ===========================
+elif category == "Contact":
     st.header("📬 Contact & Feedback")
     st.markdown("""
-    Have questions, suggestions, or bugs?
-
-    - Open GitHub issue: [ai_lit_agent](https://github.com/y-kuzn/ai_lit_agent/issues)
+    - Open issue: [GitHub](https://github.com/y-kuzn/ai_lit_agent/issues)  
     - Email: `kuzn0001@e.ntu.edu.sg`
-
-    ---
-    Made with ❤️ using Streamlit + Gemini
     """)
+    st.markdown("---")
+    st.markdown("Made with ❤️ using Streamlit + Gemini")
+    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
