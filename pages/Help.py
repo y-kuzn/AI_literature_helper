@@ -1,5 +1,7 @@
-# help.py — Hierarchical Help Page for AI Literature Helper
+# help.py — Comprehensive Help Page for AI Literature Helper
 import streamlit as st
+import smtplib
+from email.mime.text import MIMEText
 
 # Page setup
 st.set_page_config(page_title="AI Literature Helper – Help", page_icon="🆘", layout="wide")
@@ -25,7 +27,7 @@ def ask_gemini_button():
     </div>
     """, unsafe_allow_html=True)
 
-# Sidebar navigation — categories first
+# ---------- Sidebar navigation ----------
 st.sidebar.title("📘 Help Categories")
 category = st.sidebar.selectbox("Choose a category:", [
     "General",
@@ -36,6 +38,7 @@ category = st.sidebar.selectbox("Choose a category:", [
     "Integration",
     "Technical Setup",
     "Tips & Best Practices",
+    "Feedback",
     "Contact"
 ])
 
@@ -53,40 +56,40 @@ if category == "General":
     if point == "Overview":
         st.title("🆘 Overview")
         st.markdown("""
-        **AI Literature Helper** is a Streamlit app that combines PubMed, Semantic Scholar, Crossref, 
-        and Gemini AI to assist with your literature review and reference management.
+        **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI  
+        to streamline literature search, annotation, and reference management.
         """)
         ask_gemini_button()
 
     elif point == "Recommended Workflow":
         st.header("✅ Recommended Workflow")
         st.markdown("""
-        1. Start with **Keyword Search** (PubMed/Semantic Scholar).  
-        2. If not found, try **Paste Citation** mode.  
-        3. As a **last resort**, use **URL/DOI/PDF lookup**.  
+        - Start with **Keyword Search** (PubMed/Semantic Scholar).  
+        - If not found → try **Paste Citation Mode**.  
+        - As a **last resort** → use **URL / DOI / PDF Lookup**.  
 
-        👉 PubMed & Semantic Scholar are the most reliable.  
-        👉 Parsing text/PDFs is less reliable.
+        👉 PubMed & Semantic Scholar are most reliable.  
+        👉 Parsing text/PDFs is less reliable.  
         """)
         ask_gemini_button()
 
     elif point == "Disclaimers & Limitations":
         st.header("⚠️ Disclaimers & Limitations")
         st.markdown("""
-        - AI abstracts may be inaccurate.  
+        - AI abstracts may contain inaccuracies.  
         - PDF parsing often fails for scanned files.  
         - Zotero requires complete metadata.  
-        - APIs enforce rate limits (Semantic Scholar = 1 request/sec).  
+        - APIs enforce rate limits (S2 = 1 request/sec).  
         """)
         ask_gemini_button()
 
     elif point == "FAQs":
-        st.header("❓ Frequently Asked Questions")
+        st.header("❓ FAQs")
         st.markdown("""
-        **Q: Can I trust AI summaries?** → Validate with the original paper.  
+        **Q: Can I trust AI summaries?** → Verify with the original paper.  
         **Q: Why are scores inconsistent?** → They’re heuristic, not absolute.  
         **Q: Can I export to BibTeX?** → Yes, via Zotero.  
-        **Q: Does it cover all fields?** → Strongest in biomedical, CS, natural sciences.  
+        **Q: Which fields are covered?** → Strongest in biomedical, CS, natural sciences.  
         """)
         ask_gemini_button()
 
@@ -115,7 +118,7 @@ elif category == "Using the App":
         st.header("🔤 Boolean Queries")
         st.markdown("""
         - Use **AND / OR / NOT** for precision.  
-        - PubMed truncates queries >300 chars.  
+        - PubMed truncates queries >300 characters.  
         - Example: `"CRISPR" AND "prime editing" NOT "review"`.  
         """)
         ask_gemini_button()
@@ -123,10 +126,13 @@ elif category == "Using the App":
     elif point == "Paste Citation Mode":
         st.header("📋 Paste Citation Mode")
         st.markdown("""
-        - Paste references or Google Scholar text.  
-        - Extracts Title, Authors, Year, DOI.  
+        Paste citations or Google Scholar text → extracts:  
+        - Title  
+        - Authors  
+        - Year  
+        - DOI (if present)  
 
-        ⚠️ Issues:  
+        ⚠️ Known issues:  
         - Wrong authors (affiliations misparsed).  
         - Missing year.  
         - Multiple citations merged.  
@@ -139,9 +145,9 @@ elif category == "Using the App":
         ✅ Works with DOIs, landing pages, open PDFs.  
 
         ⚠️ Issues:  
-        - “Not a PDF” → mislabelled file.  
-        - Empty text → scanned PDF.  
-        - Redirects → login/paywall needed.  
+        - “Not a PDF” → server mislabeled file.  
+        - Empty text → scanned PDFs not supported.  
+        - Redirects → login/paywall required.  
         """)
         ask_gemini_button()
 
@@ -159,8 +165,8 @@ elif category == "Data Sources":
     if point == "PubMed":
         st.header("🧬 PubMed")
         st.markdown("""
-        - Best for biomedical sciences.  
-        - Limits: 300-char queries, missing abstracts.  
+        - Best for biomedical/life sciences.  
+        - Limitations: 300-char queries, missing abstracts.  
         """)
         ask_gemini_button()
 
@@ -176,7 +182,7 @@ elif category == "Data Sources":
     elif point == "Crossref":
         st.header("🔎 Crossref")
         st.markdown("""
-        - Enriches metadata using DOIs.  
+        - Enriches metadata from DOIs.  
         - Not all publishers register DOIs.  
         """)
         ask_gemini_button()
@@ -202,7 +208,7 @@ elif category == "AI Features":
     if point == "AI Annotations":
         st.header("📝 AI Annotations")
         st.markdown("""
-        AI generates 10–15 sentence abstracts.  
+        AI generates **10–15 sentence abstracts**.  
         ⚠️ Treat them as summaries, not substitutes.  
         """)
         ask_gemini_button()
@@ -244,7 +250,7 @@ elif category == "Errors & Troubleshooting":
         st.header("⚠️ API Errors")
         st.markdown("""
         - Semantic Scholar → 429 Too Many Requests.  
-        - PubMed → query too long / missing abstracts.  
+        - PubMed → query too long, missing abstracts.  
         """)
         ask_gemini_button()
 
@@ -261,7 +267,7 @@ elif category == "Errors & Troubleshooting":
         st.header("📄 PDF Parsing Issues")
         st.markdown("""
         - Only first 5000–8000 chars extracted.  
-        - Scanned PDFs return empty.  
+        - Scanned PDFs → empty output.  
         """)
         ask_gemini_button()
 
@@ -269,7 +275,7 @@ elif category == "Errors & Troubleshooting":
         st.header("⚡ Performance & Limits")
         st.markdown("""
         - Semantic Scholar: 1 req/sec.  
-        - PubMed: ~3 req/sec.  
+        - PubMed: ~3 req/sec safe.  
         - Large PDFs trimmed.  
         """)
         ask_gemini_button()
@@ -288,7 +294,7 @@ elif category == "Integration":
         st.header("📥 Zotero Integration")
         st.markdown("""
         - Needs API key, User ID, Collection ID.  
-        - Saves only relevant papers.  
+        - Saves only papers above relevance threshold.  
         - Duplicate check: Title + DOI.  
         """)
         ask_gemini_button()
@@ -297,7 +303,7 @@ elif category == "Integration":
         st.header("📑 Duplicates & Metadata")
         st.markdown("""
         - Zotero rejects incomplete metadata.  
-        - Crossref enrichment improves accuracy.  
+        - Crossref enrichment helps fill gaps.  
         """)
         ask_gemini_button()
 
@@ -322,16 +328,21 @@ elif category == "Technical Setup":
     if point == "Secrets & Configuration":
         st.header("🔑 Secrets & Configuration")
         st.markdown("""
-        `.streamlit/secrets.toml`:
+        `.streamlit/secrets.toml` example:
 
         ```toml
-        SEMANTIC_SCHOLAR_API_KEY = "key"
-        GEMINI_API_KEY = "key"
-        NCBI_EMAIL = "you@email.com"
-        NCBI_API_KEY = "key"
-        ZOTERO_API_KEY = "key"
-        ZOTERO_USER_ID = "id"
-        ZOTERO_COLLECTION_ID = "id"
+        SMTP_SERVER = "smtp.gmail.com"
+        SMTP_PORT = 465
+        SMTP_USER = "your_gmail@gmail.com"
+        SMTP_PASSWORD = "your_app_password"
+
+        SEMANTIC_SCHOLAR_API_KEY = "your_key"
+        GEMINI_API_KEY = "your_key"
+        NCBI_EMAIL = "your@email"
+        NCBI_API_KEY = "your_key"
+        ZOTERO_API_KEY = "your_key"
+        ZOTERO_USER_ID = "your_id"
+        ZOTERO_COLLECTION_ID = "your_collection_id"
         ```
         """)
         ask_gemini_button()
@@ -339,12 +350,12 @@ elif category == "Technical Setup":
     elif point == "Requirements.txt":
         st.header("📦 requirements.txt")
         st.markdown("""
-        Required packages:
-        - streamlit
-        - requests
-        - pyzotero
-        - pymupdf
-        - google-genai
+        Required packages:  
+        - streamlit  
+        - requests  
+        - pyzotero  
+        - pymupdf  
+        - google-genai  
         """)
         ask_gemini_button()
 
@@ -353,7 +364,7 @@ elif category == "Technical Setup":
         st.markdown("""
         - Works on Streamlit Cloud.  
         - Ensure secrets are valid TOML.  
-        - Pin dependency versions in requirements.txt.  
+        - Pin dependency versions.  
         """)
         ask_gemini_button()
 
@@ -367,9 +378,61 @@ elif category == "Tips & Best Practices":
     - Keep queries short.  
     - Use Boolean operators.  
     - Paste one citation per line.  
-    - Always validate AI abstracts.  
+    - Always verify AI abstracts.  
+    - Cross-check metadata before Zotero save.  
     """)
     ask_gemini_button()
+
+# ===========================
+# Feedback Form
+# ===========================
+elif category == "Feedback":
+    st.header("📬 Feedback Form")
+    st.markdown("Have suggestions, bug reports, or ideas? Fill the form below:")
+
+    with st.form("feedback_form"):
+        name = st.text_input("Your Name (optional)")
+        email = st.text_input("Your Email (so we can reply)")
+        message = st.text_area("Your Feedback", height=200)
+        submitted = st.form_submit_button("Send Feedback")
+
+    if submitted:
+        if not email.strip() or "@" not in email:
+            st.error("⚠️ Please provide a valid email so we can reply to you.")
+        elif not message.strip():
+            st.error("⚠️ Please enter a message before submitting.")
+        else:
+            try:
+                # Load SMTP secrets
+                smtp_server = st.secrets["SMTP_SERVER"]
+                smtp_port = st.secrets["SMTP_PORT"]
+                smtp_user = st.secrets["SMTP_USER"]
+                smtp_password = st.secrets["SMTP_PASSWORD"]
+
+                # Build email
+                body = f"""
+Feedback from AI Literature Helper
+
+Name: {name or "Anonymous"}
+Email: {email}
+
+Message:
+{message}
+                """
+                msg = MIMEText(body)
+                msg["Subject"] = "AI Literature Helper – New Feedback"
+                msg["From"] = smtp_user
+                msg["To"] = "kuzn0001@e.ntu.edu.sg"
+                msg["Reply-To"] = email  # lets you click Reply in inbox
+
+                # Send email
+                with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+                    server.login(smtp_user, smtp_password)
+                    server.sendmail(smtp_user, ["kuzn0001@e.ntu.edu.sg"], msg.as_string())
+
+                st.success("✅ Thank you! Your feedback has been sent.")
+            except Exception as e:
+                st.error(f"❌ Failed to send feedback: {e}")
 
 # ===========================
 # Contact
