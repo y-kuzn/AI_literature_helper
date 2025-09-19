@@ -1,0 +1,7 @@
+streamlit>=1.36.0
+requests>=2.31.0
+pyzotero>=1.5.5
+PyMuPDF>=1.24.0
+google-genai>=0.3.0
+lxml>=5.2.1
+python-dotenv>=1.0.1
