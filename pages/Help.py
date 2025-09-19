@@ -6,6 +6,27 @@ import streamlit as st
 # Page setup
 st.set_page_config(page_title="AI Literature Helper – Help", page_icon="🆘", layout="wide")
 
+# ---------- Reusable Gemini button ----------
+def ask_gemini_button():
+    st.markdown("""
+    <div style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <a href="https://gemini.google.com/" target="_blank">
+            <button style="
+                background-color: #4CAF50;
+                color: white;
+                padding: 12px 24px;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+            ">
+                🤖 Ask Gemini for More Help
+            </button>
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
+
 # Sidebar navigation — categories first
 st.sidebar.title("📘 Help Categories")
 category = st.sidebar.selectbox("Choose a category:", [
@@ -101,7 +122,13 @@ if category == "General":
         A: Strongest for biomedical, CS, natural sciences.
         """)
 
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # Using the App
@@ -159,7 +186,13 @@ elif category == "Using the App":
         - Redirects → paywalls/institutional login
         """)
 
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # Data Sources
@@ -198,7 +231,13 @@ elif category == "Data Sources":
         - Can return irrelevant matches.
         """)
 
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # AI Features
@@ -235,7 +274,13 @@ elif category == "AI Features":
         - `ai score-N` → relevance
         """)
 
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # Errors & Troubleshooting
@@ -274,7 +319,13 @@ elif category == "Errors & Troubleshooting":
         - Large PDFs trimmed
         """)
 
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # Integration
@@ -306,7 +357,13 @@ elif category == "Integration":
         - Requires NTU login
         """)
 
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # Technical Setup
@@ -351,7 +408,13 @@ elif category == "Technical Setup":
         - Ensure dependencies pinned
         """)
 
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # Tips & Best Practices
@@ -366,7 +429,13 @@ elif category == "Tips & Best Practices":
     - Validate AI abstracts with originals
     - Cross-check metadata before Zotero save
     """)
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
 
 # ===========================
 # Contact
@@ -379,4 +448,10 @@ elif category == "Contact":
     """)
     st.markdown("---")
     st.markdown("Made with ❤️ using Streamlit + Gemini")
-    st.markdown("👉 [🤖 Ask Gemini about this](https://gemini.google.com/)")
+if point == "Overview":
+    st.title("🆘 Overview")
+    st.markdown("""
+    **AI Literature Helper** combines PubMed, Semantic Scholar, Crossref, and Gemini AI
+    to help you with literature search, annotation, and Zotero export.
+    """)
+    ask_gemini_button()   # <--- button shows here
