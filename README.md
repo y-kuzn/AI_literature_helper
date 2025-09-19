@@ -1,4 +1,4 @@
-# AI_literature_helper
+# AI literature helper
 
 **AI Literature Helper** is a Streamlit-based research assistant that integrates **Semantic Scholar**, **PubMed**, **Crossref**, and a **Google fallback** with **Gemini AI** to streamline literature discovery, annotation, and organization.  
 
